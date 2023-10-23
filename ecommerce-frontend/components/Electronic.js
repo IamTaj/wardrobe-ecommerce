@@ -1,0 +1,88 @@
+import React, { useContext } from "react";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import Link from "next/link";
+import CartContext from "@/Context/CartContext";
+import WishlistContext from "@/Context/WishlistContext";
+import QuantityCount from "@/pages/Cart/QuantityCount";
+import { Box } from "@mui/material";
+
+export default function Electronic({
+  slug,
+  offers,
+  productimage,
+  reviewcount,
+  rating,
+  price,
+  status,
+  type,
+  category,
+  desc,
+  title,
+  productid,
+  link,
+  electronic,
+}) {
+  const { addToCart, cartItem, handleClickSnackBar } = useContext(CartContext);
+  const { addToWishlist, wishListId } = useContext(WishlistContext);
+  return (
+    <div className="products-display-clothing">
+      <div class="product-default-single-item product-color--golden swiper-slide">
+        <div class="image-box">
+          <div className="product-image">
+            {link && (
+              <Link {...link} style={{ textDecoration: "none" }}>
+                <img src={productimage} alt="" width={"70%"} height={"350px"} />
+              </Link>
+            )}
+          </div>
+          <Box>
+            <Box>{title}</Box>
+
+            <Box
+              sx={{ width: 1, display: "flex", justifyContent: "space-evenly" }}
+            >
+              <Box sx={{ color: "green" }}>${price}</Box>
+              <Box sx={{ color: "grey" }}>
+                <s>${price * 2}</s>
+              </Box>
+            </Box>
+          </Box>
+
+          <div class="action-link">
+            <div class="action-link-left">
+              {cartItem?.find((item) => {
+                return item?.id == productid;
+              }) ? (
+                <QuantityCount item={electronic} />
+              ) : (
+                <button
+                  style={{ color: "white" }}
+                  onClick={() => {
+                    return addToCart(electronic), handleClickSnackBar();
+                  }}
+                >
+                  Add to Cart
+                </button>
+              )}
+            </div>
+            <div class="action-link-right">
+              <button
+                onClick={() => {
+                  addToWishlist(electronic);
+                }}
+              >
+                {wishListId.find((v) => {
+                  return v == productid;
+                }) ? (
+                  <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                  <FavoriteIcon style={{ color: "white" }} />
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
